@@ -28,6 +28,8 @@ func (i Token) String() string {
 
 type TokenListOptions struct {
 	ListOptions
+	Addresses string `url:"addresses,omitempty"`
+	Symbols   string `url:"symbols,omitempty"`
 }
 
 func (s *TokenService) List(ctx context.Context, opts *TokenListOptions) ([]*Token, *Response, error) {
