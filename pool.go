@@ -35,7 +35,7 @@ type PoolListOptions struct {
 
 type PoolListByAddressesOptions struct {
 	ListOptions
-	Addresses string `url:"addresses,omitempty"`
+	Addresses interface{} `url:"addresses,omitempty"`
 }
 
 func (s *PoolService) ListByProjectCode(ctx context.Context, projectCode string, opts *PoolListOptions) ([]*Pool, *Response, error) {
@@ -73,6 +73,7 @@ func (s *PoolService) listPoolByProjectCodes(ctx context.Context, u string, opts
 }
 
 func (s *PoolService) listPoolByAddresses(ctx context.Context, u string, opts *PoolListByAddressesOptions) ([]*Pool, *Response, error) {
+	opts.Addresses = ConvertArrayOptsToApiParam(opts.Addresses)
 	u, err := addOptions(u, opts)
 	if err != nil {
 		return nil, nil, err

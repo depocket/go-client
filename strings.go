@@ -3,7 +3,9 @@ package client
 import (
 	"bytes"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"io"
+	"strings"
 
 	"reflect"
 )
@@ -75,4 +77,25 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 			fmt.Fprint(w, v.Interface())
 		}
 	}
+}
+
+func ConvertArrayOptsToApiParam(input interface{}) interface{} {
+	if input == nil {
+		return nil
+	}
+
+	output := make([]string, 0)
+	typeOfT := fmt.Sprintf("%T", input)
+
+	if typeOfT == "[]string" {
+		output = input.([]string)
+	} else if typeOfT == "string" {
+		return input.(string)
+	} else if typeOfT == "[]common.Address" {
+		for _, address := range input.([]common.Address) {
+			output = append(output, address.String())
+		}
+	}
+
+	return strings.Join(output, ",")
 }

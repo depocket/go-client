@@ -41,7 +41,10 @@ func TestPoolsService(t *testing.T) {
 	t.Run("ListByAddresses", func(t *testing.T) {
 		opt := &PoolListByAddressesOptions{
 			ListOptions: ListOptions{Chain: "bsc"},
-			Addresses:   "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82,0x0ed7e52944161450477ee417de9cd3a859b14fd0",
+			Addresses: []string{
+				"0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+				"0x0ed7e52944161450477ee417de9cd3a859b14fd0",
+			},
 		}
 		ctx := context.Background()
 		pools, _, err := client.Pools.ListByAddresses(ctx, opt)

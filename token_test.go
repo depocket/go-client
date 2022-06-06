@@ -47,7 +47,7 @@ func TestTokensService(t *testing.T) {
 			ListOptions: ListOptions{
 				Chain: "bsc",
 			},
-			Addresses: "0xcc7a91413769891de2e9ebbfc96d2eb1874b5760,0x6b9481fb5465ef9ab9347b332058d894ab09b2f6",
+			Addresses: []string{"0xcc7a91413769891de2e9ebbfc96d2eb1874b5760", "0x6b9481fb5465ef9ab9347b332058d894ab09b2f6"},
 		}
 		ctx := context.Background()
 		tokens, _, err := client.Tokens.List(ctx, opt)
@@ -66,7 +66,7 @@ func TestTokensService(t *testing.T) {
 			ListOptions: ListOptions{
 				Chain: "bsc",
 			},
-			Symbols: "GOV,DNL",
+			Symbols: []string{"GOV", "DNL"},
 		}
 		ctx := context.Background()
 		tokens, _, err := client.Tokens.List(ctx, opt)
