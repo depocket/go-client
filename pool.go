@@ -35,7 +35,7 @@ type PoolListOptions struct {
 
 type PoolListByAddressesOptions struct {
 	ListOptions
-	Addresses interface{} `url:"addresses,omitempty"`
+	Addresses []string `url:"addresses,omitempty"`
 }
 
 func (s *PoolService) ListByProjectCode(ctx context.Context, projectCode string, opts *PoolListOptions) ([]*Pool, *Response, error) {
