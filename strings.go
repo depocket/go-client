@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"strings"
 
 	"reflect"
 )
@@ -75,4 +76,8 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 			fmt.Fprint(w, v.Interface())
 		}
 	}
+}
+
+func ConvertArrayOptsToApiParam(input []string) []string {
+	return []string{strings.Join(input, ",")}
 }
