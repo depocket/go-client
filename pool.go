@@ -17,6 +17,7 @@ type Pool struct {
 	Type           string          `json:"type"`
 	PoolIndex      int64           `json:"pool_index"`
 	ProjectCode    string          `json:"project_code"`
+	Symbol         string          `json:"symbol"`
 	PoolComponents []PoolComponent `json:"pool_components"`
 }
 
