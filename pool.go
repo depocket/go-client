@@ -10,15 +10,18 @@ type PoolService service
 type PoolComponent struct {
 	TokenAddress string `json:"token_address"`
 	Type         string `json:"type"`
+	Token        Token  `json:"token"`
 }
 
 type Pool struct {
-	Address        string          `json:"address"`
-	Type           string          `json:"type"`
-	PoolIndex      int64           `json:"pool_index"`
-	ProjectCode    string          `json:"project_code"`
-	Symbol         string          `json:"symbol"`
-	PoolComponents []PoolComponent `json:"pool_components"`
+	Address         string          `json:"address"`
+	Type            string          `json:"type"`
+	PoolIndex       int64           `json:"pool_index"`
+	ProjectCode     string          `json:"project_code"`
+	Symbol          string          `json:"symbol"`
+	StakingStrategy string          `json:"staking_strategy"`
+	FarmingAddress  string          `json:"farming_address"`
+	PoolComponents  []PoolComponent `json:"pool_components"`
 }
 
 type PoolsResponse struct {

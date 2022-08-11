@@ -3,6 +3,7 @@ package client
 import (
 	"fmt"
 	"github.com/google/go-cmp/cmp"
+	"github.com/joho/godotenv"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -21,6 +22,7 @@ func TestNewRequest_badURL(t *testing.T) {
 }
 
 func setup() (client *Client, mux *http.ServeMux, serverURL string, teardown func()) {
+	_ = godotenv.Load()
 	// mux is the HTTP request multiplexer used with the test server.
 	mux = http.NewServeMux()
 
@@ -43,9 +45,14 @@ func setup() (client *Client, mux *http.ServeMux, serverURL string, teardown fun
 
 	// client is the DePocket client being tested and is
 	// configured to use test server.
-	client = NewClient(nil, nil)
-	url, _ := url.Parse(server.URL + baseURLPath + "/")
-	client.BaseURL = url
+	baseUrl := os.Getenv("DEPOCKET_SDK_ENDPOINT")
+	if len(baseUrl) > 0 {
+		client = NewClient(nil, &baseUrl)
+	} else {
+		client = NewClient(nil, nil)
+		url, _ := url.Parse(server.URL + baseURLPath + "/")
+		client.BaseURL = url
+	}
 
 	return client, mux, server.URL, server.Close
 }
