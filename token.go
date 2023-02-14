@@ -12,10 +12,10 @@ type Token struct {
 	Name     string  `json:"name"`
 	Symbol   string  `json:"symbol"`
 	SiteUrl  string  `json:"icon_url"`
-	IconUrl  string  `json:"icon_url"`
+	IconUrl  string  `json:"site_url"`
 	Type     string  `json:"type"`
 	Decimals int     `json:"decimals"`
-	Chain    string  `json:"decimals"`
+	Chain    string  `json:"chain"`
 	Price    float64 `json:"price"`
 }
 
