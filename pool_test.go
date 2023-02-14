@@ -51,7 +51,6 @@ func TestPoolsService(t *testing.T) {
 		if err != nil {
 			t.Errorf("Pools.ListByAddresses returned error: %v", err)
 		}
-		fmt.Println(pools)
 
 		want := []*Pool{{Address: "0x0001", Type: "", PoolIndex: 0, ProjectCode: "", PoolComponents: []PoolComponent{{TokenAddress: "", Type: ""}}}}
 		if !cmp.Equal(pools, want) {
