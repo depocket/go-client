@@ -11,9 +11,11 @@ type Token struct {
 	Address  string  `json:"address"`
 	Name     string  `json:"name"`
 	Symbol   string  `json:"symbol"`
+	SiteUrl  string  `json:"icon_url"`
 	IconUrl  string  `json:"icon_url"`
 	Type     string  `json:"type"`
 	Decimals int     `json:"decimals"`
+	Chain    string  `json:"decimals"`
 	Price    float64 `json:"price"`
 }
 
