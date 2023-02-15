@@ -43,6 +43,7 @@ func (s *TokenService) List(ctx context.Context, opts *TokenListOptions) ([]*Tok
 func (s *TokenService) listTokens(ctx context.Context, u string, opts *TokenListOptions) ([]*Token, *Response, error) {
 	opts.Addresses = ConvertArrayOptsToApiParam(opts.Addresses)
 	opts.Symbols = ConvertArrayOptsToApiParam(opts.Symbols)
+	opts.Projects = ConvertArrayOptsToApiParam(opts.Projects)
 	u, err := addOptions(u, opts)
 	if err != nil {
 		return nil, nil, err

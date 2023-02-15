@@ -17,7 +17,7 @@ func TestTokensService(t *testing.T) {
 
 		query := r.URL.Query()
 
-		if len(query.Get("addresses")) > 0 || len(query.Get("symbols")) > 0 {
+		if len(query.Get("addresses")) > 0 || len(query.Get("symbols")) > 0 || len(query.Get("projects")) > 0 {
 			_, _ = fmt.Fprint(w, `{ "data":[ { "name":"GovWorld" }, { "name":"Dino Land" } ], "error_code": 0 }`)
 		} else {
 			_, _ = fmt.Fprint(w, `{ "data":[ { "name":"DePo" } ], "error_code": 0 }`)
@@ -62,6 +62,25 @@ func TestTokensService(t *testing.T) {
 	})
 
 	t.Run("ListBySymbols", func(t *testing.T) {
+		opt := &TokenListOptions{
+			ListOptions: ListOptions{
+				Chain: "bsc",
+			},
+			Symbols: []string{"GOV", "DNL"},
+		}
+		ctx := context.Background()
+		tokens, _, err := client.Tokens.List(ctx, opt)
+		if err != nil {
+			t.Errorf("Tokens.List returned error: %v", err)
+		}
+
+		want := []*Token{{Name: "GovWorld"}, {Name: "Dino Land"}}
+		if !cmp.Equal(tokens, want) {
+			t.Errorf("Token.List returned %+v, want %+v", tokens, want)
+		}
+	})
+
+	t.Run("ListByProjects", func(t *testing.T) {
 		opt := &TokenListOptions{
 			ListOptions: ListOptions{
 				Chain: "bsc",
