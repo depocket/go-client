@@ -32,6 +32,7 @@ type Client struct {
 	common service
 	Tokens *TokenService
 	Pools  *PoolService
+	Prices *PriceService
 
 	UserAgent string
 }
@@ -65,6 +66,7 @@ func NewClient(httpClient *http.Client, baseUrl *string) *Client {
 	c.common.client = c
 	c.Tokens = (*TokenService)(&c.common)
 	c.Pools = (*PoolService)(&c.common)
+	c.Prices = (*PriceService)(&c.common)
 	return c
 }
 
