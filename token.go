@@ -8,6 +8,7 @@ import (
 type TokenService service
 
 type Token struct {
+	Id       int64   `json:"id"`
 	Address  string  `json:"address"`
 	Name     string  `json:"name"`
 	Symbol   string  `json:"symbol"`
