@@ -9,17 +9,16 @@ import (
 type TokenService service
 
 type Token struct {
-	Id           int64   `json:"id"`
-	Address      string  `json:"address"`
-	Name         string  `json:"name"`
-	Symbol       string  `json:"symbol"`
-	SiteUrl      string  `json:"icon_url"`
-	IconUrl      string  `json:"site_url"`
-	Type         string  `json:"type"`
-	Decimals     int     `json:"decimals"`
-	Chain        string  `json:"chain"`
-	Price        float64 `json:"price"`
-	GenesisBlock uint64  `json:"genesis_block"`
+	Id       int64   `json:"id"`
+	Address  string  `json:"address"`
+	Name     string  `json:"name"`
+	Symbol   string  `json:"symbol"`
+	SiteUrl  string  `json:"icon_url"`
+	IconUrl  string  `json:"site_url"`
+	Type     string  `json:"type"`
+	Decimals int     `json:"decimals"`
+	Chain    string  `json:"chain"`
+	Price    float64 `json:"price"`
 }
 
 type TokensResponse struct {
@@ -33,6 +32,20 @@ type TokenUpdate struct {
 	Type         string `json:"type,omitempty"`
 	Decimals     uint64 `json:"decimals,omitempty"`
 	GenesisBlock uint64 `json:"genesis_block,omitempty"`
+}
+
+type TokenGenesisBlock struct {
+	TokenId      int64  `json:"token_id"`
+	Address      string `json:"address"`
+	Chain        string `json:"chain"`
+	Name         string `json:"name"`
+	Symbol       string `json:"symbol"`
+	GenesisBlock uint64 `json:"genesis_block"`
+}
+
+type TokenGenesisBlockResponse struct {
+	Data      []*TokenGenesisBlock `json:"data"`
+	ErrorCode int                  `json:"error_code"`
 }
 
 func (i Token) String() string {
@@ -49,6 +62,33 @@ type TokenListOptions struct {
 func (s *TokenService) List(ctx context.Context, opts *TokenListOptions) ([]*Token, *Response, error) {
 	var u = "tokens"
 	return s.listTokens(ctx, u, opts)
+}
+
+func (s *TokenService) ListWithGenesisBlock(ctx context.Context, opts *TokenListOptions) ([]*TokenGenesisBlock, *Response, error) {
+	var u = "tokens/genesis-block"
+
+	opts.Addresses = ConvertArrayOptsToApiParam(opts.Addresses)
+	opts.Symbols = ConvertArrayOptsToApiParam(opts.Symbols)
+	u, err := addOptions(u, opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var response *TokenGenesisBlockResponse
+	resp, err := s.client.Do(ctx, req, &response)
+	if err != nil {
+		return nil, resp, err
+	}
+	if response.ErrorCode != 0 {
+		return nil, resp, fmt.Errorf("error code %d", response.ErrorCode)
+	}
+
+	return response.Data, resp, nil
 }
 
 func (s *TokenService) Update(ctx context.Context, chain, address string, tokenUpdate TokenUpdate) error {
