@@ -21,9 +21,9 @@ type Token struct {
 	Price    float64 `json:"price"`
 }
 
-type TokensResponse struct {
-	Data      []*Token `json:"data"`
-	ErrorCode int      `json:"error_code"`
+type DataResponse[T any] struct {
+	Data      T   `json:"data"`
+	ErrorCode int `json:"error_code"`
 }
 
 type TokenUpdate struct {
@@ -32,20 +32,6 @@ type TokenUpdate struct {
 	Type         string `json:"type,omitempty"`
 	Decimals     uint64 `json:"decimals,omitempty"`
 	GenesisBlock uint64 `json:"genesis_block,omitempty"`
-}
-
-type TokenGenesisBlock struct {
-	TokenId      int64  `json:"token_id"`
-	Address      string `json:"address"`
-	Chain        string `json:"chain"`
-	Name         string `json:"name"`
-	Symbol       string `json:"symbol"`
-	GenesisBlock uint64 `json:"genesis_block"`
-}
-
-type TokenGenesisBlockResponse struct {
-	Data      []*TokenGenesisBlock `json:"data"`
-	ErrorCode int                  `json:"error_code"`
 }
 
 func (i Token) String() string {
@@ -64,8 +50,8 @@ func (s *TokenService) List(ctx context.Context, opts *TokenListOptions) ([]*Tok
 	return s.listTokens(ctx, u, opts)
 }
 
-func (s *TokenService) ListWithGenesisBlock(ctx context.Context, opts *TokenListOptions) ([]*TokenGenesisBlock, *Response, error) {
-	var u = "tokens/genesis-block"
+func (s *TokenService) Genesis(ctx context.Context, opts *TokenListOptions) (map[string]uint64, *Response, error) {
+	var u = "genesis/tokens"
 
 	opts.Addresses = ConvertArrayOptsToApiParam(opts.Addresses)
 	opts.Symbols = ConvertArrayOptsToApiParam(opts.Symbols)
@@ -79,7 +65,7 @@ func (s *TokenService) ListWithGenesisBlock(ctx context.Context, opts *TokenList
 		return nil, nil, err
 	}
 
-	var response *TokenGenesisBlockResponse
+	var response *DataResponse[map[string]uint64]
 	resp, err := s.client.Do(ctx, req, &response)
 	if err != nil {
 		return nil, resp, err
@@ -128,7 +114,7 @@ func (s *TokenService) listTokens(ctx context.Context, u string, opts *TokenList
 		return nil, nil, err
 	}
 
-	var tokensResponse *TokensResponse
+	var tokensResponse *DataResponse[[]*Token]
 	resp, err := s.client.Do(ctx, req, &tokensResponse)
 	if err != nil {
 		return nil, resp, err
