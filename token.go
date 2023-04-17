@@ -60,7 +60,7 @@ func (s *TokenService) Genesis(ctx context.Context, opts *TokenListOptions) (map
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(http.MethodGet, u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -79,7 +79,7 @@ func (s *TokenService) Genesis(ctx context.Context, opts *TokenListOptions) (map
 
 func (s *TokenService) Update(ctx context.Context, chain, address string, tokenUpdate TokenUpdate) error {
 	url := fmt.Sprintf("token/%s?chain=%s", address, chain)
-	req, err := s.client.NewRequest("POST", url, tokenUpdate)
+	req, err := s.client.NewRequest(http.MethodPatch, url, tokenUpdate)
 	if err != nil {
 		return err
 	}
