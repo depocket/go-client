@@ -2,12 +2,13 @@ package client
 
 import (
 	"fmt"
-	"github.com/google/go-cmp/cmp"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"os"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 const (
@@ -15,7 +16,7 @@ const (
 )
 
 func TestNewRequest_badURL(t *testing.T) {
-	c := NewClient(nil, nil)
+	c := NewClient(nil, nil, "")
 	_, err := c.NewRequest("GET", ":", nil)
 	testURLParseError(t, err)
 }
@@ -43,7 +44,7 @@ func setup() (client *Client, mux *http.ServeMux, serverURL string, teardown fun
 
 	// client is the DePocket client being tested and is
 	// configured to use test server.
-	client = NewClient(nil, nil)
+	client = NewClient(nil, nil, "")
 	url, _ := url.Parse(server.URL + baseURLPath + "/")
 	client.BaseURL = url
 

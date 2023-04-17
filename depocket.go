@@ -35,6 +35,7 @@ type Client struct {
 	Prices *PriceService
 
 	UserAgent string
+	ApiKey    string
 }
 
 type service struct {
@@ -52,7 +53,7 @@ func (c *Client) Client() *http.Client {
 	return &clientCopy
 }
 
-func NewClient(httpClient *http.Client, baseUrl *string) *Client {
+func NewClient(httpClient *http.Client, baseUrl *string, apiKey string) *Client {
 	if httpClient == nil {
 		httpClient = &http.Client{}
 	}
@@ -62,7 +63,7 @@ func NewClient(httpClient *http.Client, baseUrl *string) *Client {
 		bURL, _ = url.Parse(*baseUrl)
 	}
 
-	c := &Client{client: httpClient, BaseURL: bURL, UserAgent: userAgent}
+	c := &Client{client: httpClient, BaseURL: bURL, UserAgent: userAgent, ApiKey: apiKey}
 	c.common.client = c
 	c.Tokens = (*TokenService)(&c.common)
 	c.Pools = (*PoolService)(&c.common)
@@ -101,6 +102,7 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Requ
 	if c.UserAgent != "" {
 		req.Header.Set("User-Agent", c.UserAgent)
 	}
+	req.Header.Set("api-key", c.ApiKey)
 	return req, nil
 }
 
