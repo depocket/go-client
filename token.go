@@ -27,11 +27,12 @@ type DataResponse[T any] struct {
 }
 
 type TokenUpdate struct {
-	Name         string `json:"name,omitempty"`
-	Symbol       string `json:"symbol,omitempty"`
-	Type         string `json:"type,omitempty"`
-	Decimals     uint64 `json:"decimals,omitempty"`
-	GenesisBlock uint64 `json:"genesis_block,omitempty"`
+	Name            string `json:"name,omitempty"`
+	Symbol          string `json:"symbol,omitempty"`
+	Type            string `json:"type,omitempty"`
+	Decimals        uint64 `json:"decimals,omitempty"`
+	GenesisBlock    uint64 `json:"genesis_block,omitempty"`
+	AggregatedBlock uint64 `json:"aggregated_block"`
 }
 
 func (i Token) String() string {
@@ -52,6 +53,33 @@ func (s *TokenService) List(ctx context.Context, opts *TokenListOptions) ([]*Tok
 
 func (s *TokenService) Genesis(ctx context.Context, opts *TokenListOptions) (map[string]uint64, *Response, error) {
 	var u = "genesis/tokens"
+
+	opts.Addresses = ConvertArrayOptsToApiParam(opts.Addresses)
+	opts.Symbols = ConvertArrayOptsToApiParam(opts.Symbols)
+	u, err := addOptions(u, opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	req, err := s.client.NewRequest(http.MethodGet, u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var response *DataResponse[map[string]uint64]
+	resp, err := s.client.Do(ctx, req, &response)
+	if err != nil {
+		return nil, resp, err
+	}
+	if response.ErrorCode != 0 {
+		return nil, resp, fmt.Errorf("error code %d", response.ErrorCode)
+	}
+
+	return response.Data, resp, nil
+}
+
+func (s *TokenService) AggregatedBlock(ctx context.Context, opts *TokenListOptions) (map[string]uint64, *Response, error) {
+	var u = "genesis/aggregated_block"
 
 	opts.Addresses = ConvertArrayOptsToApiParam(opts.Addresses)
 	opts.Symbols = ConvertArrayOptsToApiParam(opts.Symbols)
